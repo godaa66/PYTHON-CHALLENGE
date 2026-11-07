@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Python Challenge 🐍</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#FFF8E7;--dot:#FFE9A8;--card:#FFFFFF;--ink:#1F2A5C;--pop:#FF8A3D;--good:#7BE0A0;--bad:#FF9B9B;--btn-ink:#1F2A5C;--a1:#FFE27A;--a2:#B8F0E6;--a3:#FFD3B5;--a4:#E1D5FF;--shadow:#1F2A5C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#161A40;--dot:#1E2352;--card:#262C63;--ink:#FFF8E7;--shadow:#0B0E26}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#161A40;--dot:#1E2352;--card:#262C63;--ink:#FFF8E7;--shadow:#0B0E26}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100vh;background-color:var(--bg);background-image:radial-gradient(var(--dot) 18%,transparent 20%);background-size:36px 36px;color:var(--ink);font-family:'Baloo Bhaijaan 2',Tahoma,sans-serif;font-size:20px;line-height:1.6;display:flex;justify-content:center;padding:20px 14px 40px}
+.app{width:100%;max-width:720px;display:flex;flex-direction:column;gap:18px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:700}
+.logo{font-size:30px;font-weight:800}
+.badge{background:var(--a1);color:var(--btn-ink);border:4px solid var(--shadow);border-radius:30px;padding:2px 16px;box-shadow:4px 4px 0 var(--shadow)}
+.bar{height:22px;background:var(--card);border:4px solid var(--shadow);border-radius:20px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pop),var(--a1));transition:width .4s}
+.card{background:var(--card);border:4px solid var(--shadow);border-radius:28px;box-shadow:8px 8px 0 var(--shadow);padding:22px 20px}
+.q{font-size:26px;font-weight:800;line-height:1.5;margin:0}
+code{direction:ltr;unicode-bidi:isolate;display:inline-block;background:var(--shadow);color:#FFF8E7;font-family:'Courier New',monospace;font-size:.85em;padding:0 10px;border-radius:10px}
+.opts{display:grid;gap:12px}
+.opt{font:inherit;font-weight:700;font-size:22px;text-align:left;color:var(--btn-ink);border:4px solid var(--shadow);border-radius:22px;padding:10px 18px;cursor:pointer;box-shadow:5px 5px 0 var(--shadow);transition:transform .12s}
+.opt:nth-child(4n+1){background:var(--a1)}.opt:nth-child(4n+2){background:var(--a2)}.opt:nth-child(4n+3){background:var(--a3)}.opt:nth-child(4n+4){background:var(--a4)}
+.opt:hover:not(:disabled){transform:translateY(-3px) rotate(-1deg)}
+.opt:disabled{cursor:default}
+.opt.ok{background:var(--good);animation:pop .5s}.opt.no{background:var(--bad);animation:shake .4s}
+.fb{display:none;background:var(--a4);color:var(--btn-ink);border:4px dashed var(--shadow);border-radius:22px;padding:12px 16px;font-weight:600}
+.fb b{font-size:24px}.ex{direction:rtl;text-align:right;display:block;margin-top:8px;font-size:21px}
+.go{font:inherit;font-weight:800;font-size:24px;color:var(--btn-ink);background:var(--pop);border:4px solid var(--shadow);border-radius:30px;padding:8px 30px;cursor:pointer;box-shadow:5px 5px 0 var(--shadow);align-self:center;display:none}
+.go:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--shadow)}
+.end{text-align:center}.big{font-size:90px;line-height:1.1;animation:pop .8s}
+.score{font-size:44px;font-weight:800}
+.fall{position:fixed;top:-40px;font-size:30px;animation:fall linear forwards;pointer-events:none}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+var Q=[
+{q:'What will <code>print("2+3")</code> show?',a:['2+3','5','23','Error'],e:'كل ما بين علامتي التنصيص يُعتبر نصًا، فيُكتب زي ما هو من غير ما يتحسب.'},
+{q:'What will <code>print("2"+"3")</code> show?',a:['23','5','2+3','Error'],e:'علامة + مع النصوص بتلزقهم في بعض، فالنتيجة 23 مش 5.'},
+{q:'What does <code>print("2+3=", 2+3)</code> show?',a:['2+3= 5','2+3=2+3','5','Error'],e:'الفاصلة بتربط النص بالرقم، والعملية 2+3 بتتحسب فيطلع 5.'},
+{q:'We have <code>Name2 = "Ahmed"</code>. What does <code>print("Name2")</code> show?',a:['Name2','Ahmed','Error','None'],e:'لأن الكلمة بين علامتي تنصيص فهي نص عادي. من غير تنصيص كان هيطبع Ahmed.'},
+{q:'We have <code>Name2 = "Ahmed"</code>. What happens with <code>print(name2)</code>?',a:['Error, because Python is case-sensitive','It shows Ahmed','It shows name2','It shows None'],e:'بايثون بتفرّق بين الحروف الكبيرة والصغيرة، فـ name2 غير Name2 وبيطلع خطأ.'},
+{q:'What type of data does <code>input()</code> always return?',a:['String (text)','Integer','List','Float'],e:'input دايمًا بيرجّع نص، حتى لو المستخدم كتب رقم.'},
+{q:'The user types 5 and 3 in two <code>input()</code> calls. What does <code>print(num1+num2)</code> show?',a:['53','8','5+3','Error'],e:'الاتنين نصوص فاتلزقوا في بعض. عشان نجمعهم لازم نحوّلهم بـ int أو float.'},
+{q:'Which kind of error is <code>10 / 0</code>?',a:['Runtime Error','Syntax Error','Logical Error','No error'],e:'الكود مكتوب صح، لكن بيقع وقت التشغيل (ZeroDivisionError). الـ Syntax Error بيبقى غلطة كتابة، والـ Logical Error نتيجته غلط من غير ما يقع.'},
+{q:'<code>age = 18</code> and the code is <code>if age &gt; 18:</code> to allow driving. Can this person drive?',a:['No, because 18 is not greater than 18','Yes','Error','Only on weekends'],e:'علامة أكبر من مش بتشمل المساوي. لو عايزين 18 يسوق نستخدم أكبر من أو يساوي.'},
+{q:'x = 3 and y = 3. Which part runs in an <code>if x &gt; y / elif x &lt; y / else</code> block?',a:['else (they are equal)','if (x is greater)','elif (x is smaller)','Nothing'],e:'الشرطين الأولانيين غلط، فبتتنفذ else اللي بتشتغل لما مفيش شرط يتحقق.'},
+{q:'What is the last number printed by <code>for i in range(10, 21):</code> ?',a:['20','21','10','19'],e:'range بتقف قبل الرقم الأخير، فبتعدّ من 10 لحد 20.'},
+{q:'What does <code>range(1, 10, 2)</code> give?',a:['1 3 5 7 9','1 2 3 ... 10','2 4 6 8','1 3 5 7 9 11'],e:'الرقم التالت هو الخطوة، بنزوّد 2 كل مرة فبنطلع الأرقام الفردية. ولو الخطوة سالب بنعدّ تنازلي.'},
+{q:'Num is 0. What prints? <code>try: print(100/num)</code> <code>except ZeroDivisionError: print("Can not divide by zero")</code>',a:['Can not divide by zero','0','100','The program crashes'],e:'القسمة على صفر بتعمل خطأ، فبيتنفذ جزء except وبيطبع الرسالة من غير ما البرنامج يقع.'},
+{q:'i = 1 and <code>while i &lt;= 5:</code> only prints i and never changes it. What happens?',a:['Infinite loop','It stops after 5','It prints once','Error'],e:'قيمة i مش بتتغير فالشرط يفضل صح دايمًا واللوب مش بتخلص.'},
+{q:'What does <code>break</code> do inside a loop?',a:['Stops the loop immediately','Skips one round','Restarts the loop','Prints break'],e:'break بتوقف اللوب فورًا، مثلًا لما الباسورد يبقى صح.'},
+{q:'What does <code>continue</code> do inside a loop?',a:['Skips this round and goes on','Stops the loop','Restarts from 0','Ends the program'],e:'continue بتتخطى الدور الحالي وتكمل اللي بعده، فلو i يساوي 3 هيتخطى 3.'},
+{q:'We have <code>Numbers = [9, 8, 27]</code>. What does <code>Numbers.insert(1, 10)</code> make?',a:['[9, 10, 8, 27]','[9, 8, 27, 10]','[10, 9, 8, 27]','[9, 8, 10]'],e:'insert بتحط القيمة في المكان رقم 1 (التاني) وبتزق الباقي. أما append فبتضيف في الآخر.'},
+{q:'Which one creates an empty list?',a:['<code>Names = []</code>','<code>Names = ""</code>','<code>Names = 0</code>','<code>Names = None</code>'],e:'الأقواس المربعة الفاضية بتعمل ليست فاضية. أما علامتي تنصيص فاضيتين فبتعمل نص فاضي.'},
+{q:'Age is 17 and licence is "yes". What does <code>age &gt;= 18 or licence == "yes"</code> decide?',a:['You can drive','You cannot drive','Error','Nothing'],e:'or بتحتاج شرط واحد بس يتحقق، والرخصة موجودة. لو كانت and كان هيبقى ممنوع.'},
+{q:'A function only does <code>print(x+y)</code> with no return. What does <code>s = add(3, 4)</code> store in s?',a:['None','7','0','Error'],e:'من غير return الفانكشن بترجّع None. استخدم return لو عايز تخزّن النتيجة.'}
+];
+var app=document.getElementById('app'),i=0,score=0,locked=false,N=Q.length;
+function shuffle(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
+function ar(n){return String(n)}
+function show(){
+  locked=false;var q=Q[i];
+  var opts=shuffle(q.a.map(function(t,k){return {t:t,ok:k===0}}));
+  app.innerHTML='<div class="top"><span class="logo">🐍 Python Challenge</span><span class="badge">⭐ '+ar(score)+'</span></div>'
+  +'<div class="bar"><i style="width:'+(i/N*100)+'%"></i></div>'
+  +'<div class="card"><p class="q">'+ar(i+1)+' of '+ar(N)+': '+q.q+'</p></div>'
+  +'<div class="opts" id="o"></div><div class="fb" id="fb"></div><button class="go" id="go"></button>';
+  var o=document.getElementById('o');
+  opts.forEach(function(x){var b=document.createElement('button');b.className='opt';b.innerHTML=x.t;b.onclick=function(){pick(b,x.ok,opts)};o.appendChild(b)});
+}
+function pick(b,ok,opts){
+  if(locked)return;locked=true;
+  var bs=document.querySelectorAll('.opt');
+  bs.forEach(function(x,k){x.disabled=true;if(opts[k].ok)x.classList.add('ok')});
+  if(ok)score++;else b.classList.add('no');
+  var fb=document.getElementById('fb');
+  fb.style.display='block';
+  fb.innerHTML=(ok?'<b>🎉 Great job, champ!</b>':'<b>😅 Almost! Try the next one!</b>')+'<span class="ex">'+Q[i].e+'</span>';
+  var g=document.getElementById('go');g.style.display='block';g.textContent=i<N-1?'Next ➡️':'See my score 🏆';
+  g.onclick=function(){i++;if(i<N)show();else finish()};
+}
+function finish(){
+  var r=score/N,m=r>=0.9?['🏆','Python legend!']:r>=0.7?['🥇','Super smart!']:r>=0.5?['🥈','Good! Keep practicing!']:['🌱','Nice start! Review the slides and try again!'];
+  app.innerHTML='<div class="card end"><div class="big">'+m[0]+'</div><p class="q">'+m[1]+'</p><p class="score">'+ar(score)+' / '+ar(N)+'</p><p>You earned '+ar(score)+' stars ⭐</p><button class="go" style="display:inline-block" id="re">Play again 🔄</button></div>';
+  document.getElementById('re').onclick=function(){i=0;score=0;show()};
+  if(r>=0.5){var E=['🎉','⭐','🐍','🎈','✨'];for(var k=0;k<26;k++){(function(){var s=document.createElement('span');s.className='fall';s.textContent=E[k%5];s.style.left=Math.random()*95+'vw';s.style.animationDuration=(2+Math.random()*2.5)+'s';document.body.appendChild(s);setTimeout(function(){s.remove()},5000)})()}}
+}
+show();
+</script>
+</body>
+</html>
